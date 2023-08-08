@@ -1,20 +1,24 @@
-mod calc_buffs;
-
-pub use calc_buffs::{Chicks, Unit};
+mod unit;
+use rust_decimal_macros::dec;
+use unit::{Accompanyings, Chicks, HeadCount, UnitMaker};
 
 fn main() {
-  let exps_cover: Vec<_> = (2..5)
+  let exps_cover: Vec<_> = (2..6)
     .map(|x| {
-      let chicks = Chicks::new(x).unwrap();
-      let unit = Unit::new_with_cover(chicks);
-      unit.sum_exp(10000.)
+      let count = HeadCount::new(x);
+      let unit = UnitMaker::new(count)
+        .add(Accompanyings::EMILY_2)
+        .fill(Chicks::Cover);
+      unit.sum_exp(dec!(10000))
     })
     .collect();
-  let exps_uncover: Vec<_> = (2..5)
+  let exps_uncover: Vec<_> = (2..6)
     .map(|x| {
-      let chicks = Chicks::new(x).unwrap();
-      let unit = Unit::new_without_cover(chicks);
-      unit.sum_exp(10000.)
+      let count = HeadCount::new(x);
+      let unit = UnitMaker::new(count)
+        .add(Accompanyings::EMILY_2)
+        .fill(Chicks::Uncover);
+      unit.sum_exp(dec!(10000))
     })
     .collect();
   dbg!(exps_cover);
